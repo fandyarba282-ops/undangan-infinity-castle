@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Pernikahan - Infinity Castle</title>
+    <style>
+        /* --- RESET & DASAR --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            font-family: 'Cinzel', 'Segoe UI', Serif;
+            background-color: #0d0804;
+            color: #ffffff;
+        }
+
+        /* --- CONTAINER COVER UTAMA --- */
+        #cover-infinity {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* --- STRUKTUR PINTU GESER DENGAN GAMBAR ASLI --- */
+        .shoji-door {
+            position: absolute;
+            top: 0;
+            width: 50%; /* Masing-masing pintu mengambil 50% lebar layar */
+            height: 100%;
+            box-sizing: border-box;
+            /* Transisi pergeseran pintu selama 1.5 detik saat terbuka */
+            transition: transform 1.5s cubic-bezier(0.77, 0, 0.175, 1);
+            z-index: 1;
+
+            /* KUNCI UTAMA: Memanggil gambar pintu asli Anda */
+            background-image: url('pintu.jpg'); 
+            background-size: 100vw 100vh; /* Memaksa gambar berukuran sebesar layar penuh, bukan seukuran pintu */
+            background-repeat: no-repeat;
+        }
+
+        /* Pintu Kiri (Mengambil potongan gambar sebelah kiri) */
+        .door-left {
+            left: 0;
+            background-position: left center; /* Menampilkan gambar dari koordinat kiri */
+            border-right: 1px solid rgba(0, 0, 0, 0.6);
+            box-shadow: inset -10px 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* Pintu Kanan (Mengambil potongan gambar sebelah kanan) */
+        .door-right {
+            right: 0;
+            background-position: right center; /* Menampilkan gambar dari koordinat kanan */
+            border-left: 1px solid rgba(0, 0, 0, 0.6);
+            box-shadow: inset 10px 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* --- KONTEN OVERLAY (LOGO & TOMBOL) --- */
+        .cover-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 25px;
+            width: 90%;
+            max-width: 420px;
+            /* Efek transisi memudar (Pilihan B) selama 0.6 detik */
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        /* Logo Utama Pernikahan (cover.jpg) */
+        .wedding-logo {
+            width: 100%;
+            max-width: 320px;
+            height: auto;
+            filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.4));
+            animation: pulseGlow 3s infinite alternate;
+        }
+
+        /* Kotak Informasi Tamu */
+        .guest-box {
+            background: rgba(13, 8, 4, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 123, 0, 0.25);
+            padding: 20px;
+            border-radius: 4px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+        }
+        .guest-box p {
+            font-size: 13px;
+            color: #bfa38a;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+        .guest-box .guest-name {
+            font-size: 20px;
+            color: #ffffff;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        /* Tombol Buka Undangan */
+        .btn-open {
+            background: #660000;
+            color: #ffffff;
+            border: 2px solid #ff7b00;
+            padding: 14px 36px;
+            font-size: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            border-radius: 4px;
+            box-shadow: 0 0 15px rgba(255, 123, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+        .btn-open:hover {
+            background: #800000;
+            box-shadow: 0 0 25px rgba(255, 123, 0, 0.6);
+            transform: scale(1.03);
+        }
+
+        /* --- KELAS ANIMASI AKTIVASI (VIA JAVASCRIPT) --- */
+        /* Tahap 1: Logo memudar menghilang */
+        .fade-out-content {
+            opacity: 0;
+            transform: scale(0.95);
+            pointer-events: none;
+        }
+
+        /* Tahap 2: Pintu bergeser keluar layar secara sinkron */
+        .open-left-door {
+            transform: translateX(-100%);
+        }
+        .open-right-door {
+            transform: translateX(100%);
+        }
+
+        /* Tahap 3: Menghilangkan container agar halaman bisa di-scroll */
+        .remove-cover {
+            display: none !important;
+        }
+
+        /* --- HALAMAN ISI UNDANGAN (DI BALIK PINTU) --- */
+        #main-invitation {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 40px 20px;
+            background: radial-gradient(circle, #26170b 0%, #050301 100%);
+        }
+        .inner-content {
+            max-width: 600px;
+            animation: fadeInWelcome 2s ease forwards;
+            opacity: 0;
+        }
+        .inner-content h1 {
+            color: #ff7b00;
+            font-size: 32px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px rgba(255,123,0,0.4);
+        }
+
+        /* --- ANIMASI KEYFRAMES --- */
+        @keyframes pulseGlow {
+            0% { filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.4)); }
+            100% { filter: drop-shadow(0 0 25px rgba(255, 123, 0, 0.5)); }
+        }
+        @keyframes fadeInWelcome {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="teng-sound" src="teng.mp3" preload="auto"></audio>
+
+    <div id="cover-infinity">
+        <div class="shoji-door door-left" id="left-door"></div>
+        <div class="shoji-door door-right" id="right-door"></div>
+
+        <div class="cover-content" id="interactive-content">
+            <img src="cover.jpg" alt="The Wedding of Zenitsu & Nezuko" class="wedding-logo">
+            
+            <div class="guest-box">
+                <p>Kepada Yth. Bapak/Ibu/Saudara/i</p>
+                <div class="guest-name" id="guest-target">Nama Tamu Undangan</div>
+            </div>
+
+            <button class="btn-open" onclick="bukaUndanganKastil()">
+                🚪 Buka Undangan
+            </button>
+        </div>
+    </div>
+
+    <main id="main-invitation">
+        <div class="inner-content">
+            <h1>Selamat Datang di Aula Utama</h1>
+            <p>Bagian isi undangan digital bertema Infinity Castle Anda akan dimulai dari sini...</p>
+        </div>
+    </main>
+
+    <script>
+        // Mengambil nama tamu otomatis dari URL (Contoh: namasitus.com/?to=NamaTamu)
+        const urlParams = new URLSearchParams(window.location.search);
+        const namaTamu = urlParams.get('to');
+        if (namaTamu) {
+            document.getElementById('guest-target').innerText = namaTamu;
+        }
+
+        function bukaUndanganKastil() {
+            const suaraTeng = document.getElementById('teng-sound');
+            const konten = document.getElementById('interactive-content');
+            const pintuKiri = document.getElementById('left-door');
+            const pintuKanan = document.getElementById('right-door');
+            const coverUtama = document.getElementById('cover-infinity');
+
+            // 1. Putar suara petikan Biwa "Teng!"
+            suaraTeng.play().catch(error => console.log("Audio terblokir sistem browser"));
+
+            // 2. TAHAP 1: Logo memudar halus (Fade Out) selama 0.6 detik
+            konten.classList.add('fade-out-content');
+
+            // 3. TAHAP 2: Setelah logo hilang, kedua bilah gambar pintu bergeser berlawanan arah secara presisi
+            setTimeout(() => {
+                pintuKiri.classList.add('open-left-door');
+                pintuKanan.classList.add('open-right-door');
+            }, 600);
+
+            // 4. TAHAP 3: Hancurkan layer pembuka agar isi undangan bisa diakses sepenuhnya
+            setTimeout(() => {
+                coverUtama.classList.add('remove-cover');
+            }, 2100); 
+        }
+    </script>
+</body>
+</html>
