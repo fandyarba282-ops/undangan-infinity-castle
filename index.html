@@ -81,12 +81,13 @@
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
-        /* Logo Utama Pernikahan (Ukuran Pas & Teks Terbaca) */
+       /* Logo Utama Pernikahan (Bayangan Halus & Tetap Kontras) */
         .wedding-logo {
             width: 100%;
-            max-width: 210px; /* Dinaikkan dari 160px agar teks logo "The Wedding of..." jelas */
+            max-width: 210px;
             height: auto;
-            filter: contrast(1.1) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 10px rgba(255, 0, 0, 0.3));
+            /* Gabungan kontras, bayangan hitam tipis (0.5), dan glow merah tipis di awal */
+            filter: contrast(1.1) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 8px rgba(255, 0, 0, 0.3));
             animation: pulseGlow 3s infinite alternate;
         }
 
@@ -185,13 +186,15 @@
             text-shadow: 0 0 10px rgba(255,123,0,0.4);
         }
 
-        /* --- ANIMASI KEYFRAMES --- */
+       /* --- ANIMASI KEYFRAMES (Bayangan hitam dikunci agar tidak hilang saat berdenyut) --- */
         @keyframes pulseGlow {
-            0% { filter: drop-shadow(0 0 10px rgba(255, 0, 0, 0.4)); }
-            100% { filter: drop-shadow(0 0 25px rgba(255, 123, 0, 0.5)); }
-        }
-        @keyframes fadeInWelcome {
-            to { opacity: 1; }
+            0% { 
+                filter: contrast(1.1) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 8px rgba(255, 0, 0, 0.3)); 
+            }
+            100% { 
+                /* Bayangan hitam tetap diam (0.5), hanya efek glow oranye yang membesar secara halus */
+                filter: contrast(1.1) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 20px rgba(255, 123, 0, 0.45)); 
+            }
         }
     </style>
 </head>
