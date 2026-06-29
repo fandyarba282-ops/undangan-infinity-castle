@@ -81,7 +81,7 @@
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
-        /* Logo Utama Pernikahan (Disisipkan kembali dengan bayangan tegas) */
+        /* Logo Utama Pernikahan */
         .wedding-logo {
             width: 100%;
             max-width: 210px; /* Ukuran pas di layar */
@@ -91,44 +91,44 @@
             animation: pulseGlow 3s infinite alternate;
         }
 
-        /* Kotak Informasi Tamu (Dibuat Slim & Seimbang dengan Logo) */
+        /* Kotak Informasi Tamu (Sekarang Transparan / Glassmorphism) */
         .guest-box {
-            background: rgba(10, 6, 3, 0.93);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1.5px solid rgba(255, 123, 0, 0.55);
-            padding: 10px 16px; /* Padding dikurangi agar kotak tidak terlalu tinggi */
+            background: rgba(0, 0, 0, 0.25); /* Diubah jadi transparan tipis agar tembus pandang */
+            backdrop-filter: blur(8px); /* Efek blur kaca latar belakang diturunkan sedikit agar lebih clear */
+            -webkit-backdrop-filter: blur(8px);
+            border: 1.5px solid rgba(255, 123, 0, 0.45); /* Border oranye dibuat sedikit lebih lembut */
+            padding: 10px 16px;
             border-radius: 6px;
             width: 100%;
-            max-width: 240px; /* Membatasi lebar agar selaras dengan logo */
-            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.9);
+            max-width: 240px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4); /* Shadow dilembutkan agar tidak nge-blok hitam di bawahnya */
         }
 
         .guest-box p {
-            font-size: 10px; /* Ukuran teks label diturunkan */
+            font-size: 10px;
             color: #e6caa7;
             text-transform: uppercase;
             letter-spacing: 1.5px;
             margin-bottom: 4px;
             font-weight: 600;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.9); /* Penegasan shadow teks agar tetap terbaca */
         }
 
         .guest-box .guest-name {
-            font-size: 15px; /* Dikecilkan agar proporsional di dalam kotak slim */
+            font-size: 15px;
             color: #ffffff;
             font-weight: 700;
             letter-spacing: 1px;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.95); /* Penegasan shadow nama tamu */
         }
 
-        /* Tombol Buka Undangan (Dibuat Lebih Mungil & Estetik) */
+        /* Tombol Buka Undangan */
         .btn-open {
             background: #660000;
             color: #ffffff;
             border: 2px solid #ff7b00;
-            padding: 10px 24px; /* Ukuran diperkecil agar pas */
-            font-size: 12px; /* Diturunkan agar tidak mendominasi logo */
+            padding: 10px 24px;
+            font-size: 12px;
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 2px;
@@ -144,14 +144,12 @@
         }
 
         /* --- KELAS ANIMASI AKTIVASI (VIA JAVASCRIPT) --- */
-        /* Tahap 1: Logo memudar menghilang */
         .fade-out-content {
             opacity: 0;
             transform: scale(0.95);
             pointer-events: none;
         }
 
-        /* Tahap 2: Pintu bergeser keluar layar secara sinkron */
         .open-left-door {
             transform: translateX(-100%);
         }
@@ -159,7 +157,6 @@
             transform: translateX(100%);
         }
 
-        /* Tahap 3: Menghilangkan container agar halaman bisa di-scroll */
         .remove-cover {
             display: none !important;
         }
@@ -187,7 +184,7 @@
             text-shadow: 0 0 10px rgba(255,123,0,0.4);
         }
 
-        /* --- ANIMASI KEYFRAMES (Bayangan hitam tegas dikunci di kedua sisi) --- */
+        /* --- ANIMASI KEYFRAMES --- */
         @keyframes pulseGlow {
             0% { 
                 filter: contrast(1.1) drop-shadow(0 5px 12px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 8px rgba(255, 0, 0, 0.3)); 
@@ -231,7 +228,6 @@
     </main>
 
     <script>
-        // Mengambil nama tamu otomatis dari URL (Contoh: namasitus.com/?to=NamaTamu)
         const urlParams = new URLSearchParams(window.location.search);
         const namaTamu = urlParams.get('to');
         if (namaTamu) {
@@ -245,19 +241,15 @@
             const pintuKanan = document.getElementById('right-door');
             const coverUtama = document.getElementById('cover-infinity');
 
-            // 1. Putar suara petikan Biwa "Teng!"
             suaraTeng.play().catch(error => console.log("Audio terblokir sistem browser"));
 
-            // 2. TAHAP 1: Logo memudar halus (Fade Out) selama 0.6 detik
             konten.classList.add('fade-out-content');
 
-            // 3. TAHAP 2: Setelah logo hilang, kedua bilah gambar pintu bergeser berlawanan arah secara presisi
             setTimeout(() => {
                 pintuKiri.classList.add('open-left-door');
                 pintuKanan.classList.add('open-right-door');
             }, 600);
 
-            // 4. TAHAP 3: Hancurkan layer pembuka agar isi undangan bisa diakses sepenuhnya
             setTimeout(() => {
                 coverUtama.classList.add('remove-cover');
             }, 2100); 
