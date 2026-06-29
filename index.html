@@ -87,26 +87,20 @@
 
         /* Kotak Informasi Tamu (Luxury Black & Gold Transparent) */
         .guest-box {
-            /* Perpaduan hitam transparan mewah yang senada dengan background utama */
             background: rgba(13, 8, 4, 0.65); 
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            
-            /* Border emas/oranye yang dipertegas kilaunya */
             border: 1.5px solid rgba(255, 136, 0, 0.7); 
             padding: 12px 16px;
             border-radius: 6px;
             width: 100%;
             max-width: 240px;
-            
-            /* Gabungan shadow hitam pekat dan pendaran aura emas tipis di sekitarnya */
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.65), 
-                        0 0 15px rgba(255, 123, 0, 0.15); 
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.65), 0 0 15px rgba(255, 123, 0, 0.15); 
         }
 
         .guest-box p {
             font-size: 10px;
-            color: #ffb86c; /* Warna teks label digeser ke arah emas hangat */
+            color: #ffb86c; 
             text-transform: uppercase;
             letter-spacing: 1.5px;
             margin-bottom: 4px;
@@ -184,23 +178,63 @@
             text-shadow: 0 0 10px rgba(255,123,0,0.4);
         }
 
+        /* --- TOMBOL KONTROL MUSIK MELAYANG --- */
+        .music-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 999;
+            width: 44px;
+            height: 44px;
+            background: rgba(13, 8, 4, 0.7);
+            border: 1.5px solid #ff7b00;
+            border-radius: 50%;
+            color: #ffffff;
+            font-size: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            transition: all 0.3s ease;
+            visibility: hidden;
+            opacity: 0;
+        }
+        .music-control.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .music-control:hover {
+            transform: scale(1.1);
+            background: #660000;
+        }
+
+        .rotate-music {
+            animation: spinning 4s linear infinite;
+        }
+
         /* --- ANIMASI KEYFRAMES --- */
         @keyframes pulseGlow {
-            0% { 
-                filter: contrast(1.1) drop-shadow(0 5px 12px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 8px rgba(255, 0, 0, 0.3)); 
-            }
-            100% { 
-                filter: contrast(1.1) drop-shadow(0 5px 12px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 20px rgba(255, 123, 0, 0.45)); 
-            }
+            0% { filter: contrast(1.1) drop-shadow(0 5px 12px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 8px rgba(255, 0, 0, 0.3)); }
+            100% { filter: contrast(1.1) drop-shadow(0 5px 12px rgba(0, 0, 0, 0.75)) drop-shadow(0 0 20px rgba(255, 123, 0, 0.45)); }
         }
         @keyframes fadeInWelcome {
             to { opacity: 1; }
+        }
+        @keyframes spinning {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
 
     <audio id="teng-sound" src="teng.mp3" preload="auto"></audio>
+    <audio id="bg-music" src="musik-isi.mp3" loop preload="auto"></audio>
+
+    <button id="music-btn" class="music-control" onclick="toggleMusik()">🎵</button>
 
     <div id="cover-infinity">
         <div class="shoji-door door-left" id="left-door"></div>
@@ -234,25 +268,52 @@
             document.getElementById('guest-target').innerText = namaTamu;
         }
 
+        const suaraTeng = document.getElementById('teng-sound');
+        const musikIsi = document.getElementById('bg-music');
+        const tombolMusik = document.getElementById('music-btn');
+
         function bukaUndanganKastil() {
-            const suaraTeng = document.getElementById('teng-sound');
             const konten = document.getElementById('interactive-content');
             const pintuKiri = document.getElementById('left-door');
             const pintuKanan = document.getElementById('right-door');
             const coverUtama = document.getElementById('cover-infinity');
 
-            suaraTeng.play().catch(error => console.log("Audio terblokir sistem browser"));
+            // 1. Putar efek suara "Teng!" secara instan begitu tombol diklik
+            suaraTeng.play().catch(error => console.log("Audio pembuka terblokir"));
 
+            // 2. Hilangkan teks dan tombol cover secara perlahan
             konten.classList.add('fade-out-content');
 
+            // 3. Pintu Shoji mulai bergeser membuka pada milidetik ke-600
             setTimeout(() => {
                 pintuKiri.classList.add('open-left-door');
                 pintuKanan.classList.add('open-right-door');
             }, 600);
 
+            // 4. Sinkronisasi Sempurna: Musik baru berputar setelah pintu terbuka penuh (2100ms)
             setTimeout(() => {
                 coverUtama.classList.add('remove-cover');
+
+                // Musik latar dan tombol kontrol dipicu tepat saat tirai cover dibongkar
+                musikIsi.play().then(() => {
+                    tombolMusik.classList.add('show', 'rotate-music');
+                }).catch(error => {
+                    console.log("Musik latar diblokir sistem browser");
+                    tombolMusik.classList.add('show');
+                });
             }, 2100); 
+        }
+
+        function toggleMusik() {
+            if (musikIsi.paused) {
+                musikIsi.play();
+                tombolMusik.classList.add('rotate-music');
+                tombolMusik.innerText = "🎵";
+            } else {
+                musikIsi.pause();
+                tombolMusik.classList.remove('rotate-music');
+                tombolMusik.innerText = "🔇";
+            }
         }
     </script>
 </body>
