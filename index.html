@@ -75,55 +75,58 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 15px; /* Dikecilkan dari 25px agar lebih rapat */
+            gap: 15px;
             width: 90%;
-            max-width: 420px;
+            max-width: 300px; /* Diperkecil dari 400px agar area cover lebih slim */
             transition: opacity 0.6s ease, transform 0.6s ease;
         }
 
-        /* Logo Utama Pernikahan */
+        /* Logo Utama Pernikahan (Dibuat Mungil & Anggun) */
         .wedding-logo {
             width: 100%;
-            max-width: 250px; /* Dikecilkan dari 320px */
+            max-width: 160px; /* Dikecilkan signifikan dari 260px */
             height: auto;
-            filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.4));
+            filter: contrast(1.1) drop-shadow(0 8px 16px rgba(0, 0, 0, 0.85)) drop-shadow(0 0 10px rgba(255, 0, 0, 0.3));
             animation: pulseGlow 3s infinite alternate;
         }
 
-        /* Kotak Informasi Tamu */
+        /* Kotak Informasi Tamu (Dibuat Slim & Ringkas) */
         .guest-box {
-            background: rgba(13, 8, 4, 0.8);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 123, 0, 0.25);
-            padding: 15px; /* Dikecilkan dari 20px */
-            border-radius: 4px;
+            background: rgba(10, 6, 3, 0.93);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1.5px solid rgba(255, 123, 0, 0.55);
+            padding: 10px 15px; /* Padding dikurangi agar kotak tidak terlalu tebal */
+            border-radius: 6px;
             width: 100%;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.9);
         }
 
         .guest-box p {
-            font-size: 11px; /* Sedikit dikecilkan agar lebih manis */
-            color: #bfa38a;
+            font-size: 10px; /* Teks label dikecilkan */
+            color: #e6caa7;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 5px; /* Margin diperkecil */
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
+            font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
         }
 
         .guest-box .guest-name {
-            font-size: 18px; /* Dikecilkan sedikit dari 20px */
+            font-size: 16px; /* Nama tamu diturunkan ke 16px agar pas di kotak mungil */
             color: #ffffff;
-            font-weight: 600;
+            font-weight: 700;
             letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.9);
         }
 
-        /* Tombol Buka Undangan */
+        /* Tombol Buka Undangan (Disesuaikan ukurannya agar seimbang) */
         .btn-open {
             background: #660000;
             color: #ffffff;
             border: 2px solid #ff7b00;
-            padding: 14px 36px;
-            font-size: 15px;
+            padding: 10px 28px; /* Diperkecil dari 14px 36px */
+            font-size: 13px; /* Diperkecil dari 15px */
             font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 2px;
